@@ -7,5 +7,6 @@ echo 'eval "$(pyenv init -)"' >> ~/.bashrc
 exec $SHELL
 git clone https://github.com/yyuu/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv
 sudo apt-get install python-virtualenv
+sudo apt-get install libssl-dev
 echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.bashrc
 source ~/.bashrc
