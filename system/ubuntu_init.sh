@@ -11,3 +11,11 @@ echo "set fileencodings=utf-8,gb2312,gbk,gb18030">>~/.vimrc
 echo "set termencoding=utf-8">>~/.vimrc
 echo "set number">>~/.vimrc
 echo "set encoding=prc">>~/.vimrc
+# 数据库
+sudo apt-get install mysql-server
+sudo apt-get install mysql-client
+sudo apt-get install libmysqlclient-dev
+sudo apt-get install mongodb
+sudo apt-get install redis-server
+# docker
+sudo apt-get install docker.io 
