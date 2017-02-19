@@ -19,3 +19,8 @@ sudo apt-get install mongodb
 sudo apt-get install redis-server
 # docker
 sudo apt-get install docker.io 
+sudo groupadd docker
+sudo gpasswd -a ${USER} docker
+sudo service docker restart
+#supervisor 
+sudo apt-get install supervisor
