@@ -28,3 +28,4 @@ mail.py is the script for sending mails useing python.
                 -s if use ssl_smtp
                 -t if has file
 ```
+
