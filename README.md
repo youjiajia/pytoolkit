@@ -19,5 +19,9 @@ Individual learning and working scripts.This project has these directories.
 
 
 ### script
-> Small script summary
+Small script summary
 > * mail.py is the script for sending mails useing python.
+> use:python mail.py
+> Parameters: -f filepath
+> -n filename
+> 			  
