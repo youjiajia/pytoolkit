@@ -2,8 +2,8 @@
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-import sys
 import getopt
+import sys
 
 
 def load_from_obj(obj):
@@ -22,16 +22,16 @@ def load_config():
 
 def msg_init(cfg):
     if cfg.get("TYPE", "text") == "text":
-        msg = MIMEText(cfg.get("CONTENT"))
+        msg = MIMEText(cfg.get("CONTENT").encode("utf-8"))
     else:
-        msg = MIMEMultipart(cfg.get("CONTENT"))
+        msg = MIMEMultipart(cfg.get("CONTENT").encode("utf-8"))
         att = MIMEText(open(cfg.get("FILEPATH"), 'rb').read(), 'base64', 'utf-8')
         att["Content-Type"] = 'application/octet-stream'
         att["Content-Disposition"] = 'attachment; filename="{0}"'.format(
             cfg.get("FILENAME"))
         msg.attach(att)
-    msg["Subject"] = cfg.get("SUBJECT")
-    msg["From"] = cfg.get("_USER_NAME")
+    msg["Subject"] = cfg.get("SUBJECT").encode("utf-8")
+    msg["From"] = cfg.get("_USER_NAME").encode("utf-8")
     msg["To"] = cfg.get("_TO")
     return msg.as_string()
 
@@ -79,12 +79,12 @@ def sysopt():
 class DefaultConfig(object):
     SMTP_URL = "smtp.qq.com"
     SMTP_PORT = 465
-    _USER = "***@qq.com"
-    _USER_NAME = "test"
-    _PWD = "***************"
-    _TO = "******@qq.com"
-    CONTENT = "content"
-    SUBJECT = "Subject"
+    _USER = "*******@qq.com"
+    _USER_NAME = u"中文test"
+    _PWD = "*********"
+    _TO = "*******@qq.com"
+    CONTENT = u"content中文"
+    SUBJECT = u"Subject 中文"
 
 
 if __name__ == "__main__":
