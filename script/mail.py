@@ -4,6 +4,10 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import getopt
 import sys
+import random
+from email.header import Header
+reload(sys)
+sys.setdefaultencoding("utf-8")
 
 
 def load_from_obj(obj):
@@ -22,29 +26,42 @@ def load_config():
 
 def msg_init(cfg):
     if cfg.get("TYPE", "text") == "text":
-        msg = MIMEText(cfg.get("CONTENT").encode("utf-8"))
+        msg = MIMEText(cfg.get("CONTENT"), _charset='utf-8')
+        msg["Accept-Language"] = "zh-CN"
+        msg["Accept-Charset"] = "ISO-8859-1,utf-8"
     else:
-        msg = MIMEMultipart(cfg.get("CONTENT").encode("utf-8"))
+        # add file
+        msg = MIMEMultipart()
         att = MIMEText(open(cfg.get("FILEPATH"), 'rb').read(), 'base64', 'utf-8')
         att["Content-Type"] = 'application/octet-stream'
         att["Content-Disposition"] = 'attachment; filename="{0}"'.format(
             cfg.get("FILENAME"))
         msg.attach(att)
-    msg["Subject"] = cfg.get("SUBJECT").encode("utf-8")
-    msg["From"] = cfg.get("_USER_NAME").encode("utf-8")
-    msg["To"] = cfg.get("_TO")
+        # add content
+        textmsg = MIMEText(cfg.get("CONTENT"), _charset='utf-8')
+        textmsg["Accept-Language"] = "zh-CN"
+        textmsg["Accept-Charset"] = "ISO-8859-1,utf-8"
+        msg.attach(textmsg)
+    subject = cfg.get("SUBJECT")
+    if not isinstance(subject, unicode):
+        subject = unicode(subject)
+    msg["Subject"] = subject
+    msg["From"] = cfg.get("_USER_NAME")
+    msg["To"] = ",".join(cfg.get("_TO"))
     return msg.as_string()
 
 
 def main(cfg):
     try:
         if cfg.get("SMTP_SSL"):
-            s = smtplib.SMTP_SSL(cfg.get("SMTP_URL"),
-                                 cfg.get("SMTP_PORT"))
+            s = smtplib.SMTP()
+            s.connect(cfg.get("SMTP_URL"),
+                      cfg.get("SMTP_PORT"))
+            s.starttls()
         else:
             s = smtplib.SMTP()
             s.connect(cfg.get("SMTP_URL"),
-                                 cfg.get("SMTP_PORT"))
+                      cfg.get("SMTP_PORT"))
         s.login(cfg.get("_USER"),
                 cfg.get("_PWD"))
         msgstr = msg_init(cfg)
@@ -78,16 +95,20 @@ def sysopt():
 
 class DefaultConfig(object):
     SMTP_URL = "smtp.qq.com"
-    SMTP_PORT = 465
-    _USER = "*******@qq.com"
-    _USER_NAME = u"中文test"
-    _PWD = "*********"
-    _TO = "*******@qq.com"
-    CONTENT = u"content中文"
-    SUBJECT = u"Subject 中文"
+    SMTP_PORT = 25
+    _USER = "test**@qq.com"
+    _USER_NAME = "{0}<1test**@qq.com>".format(Header('运维','utf-8'))
+    _PWD = "test**"
+    _TO = ["test**@163.com", "test**@qq.com", "test**@gamil.com"]
+    CONTENT = "content中文{0}".format(random.randint(0, 20))
+    SUBJECT = "Subject 中文{0}".format(random.randint(0, 20))
 
 
 if __name__ == "__main__":
     # 使用qq邮箱 ssl smtp发送邮件
+    """
+    20170225 Tips:
+        1 _USER must as similar as _USER_NAME,because
+    """
     cfg = load_config()
     main(cfg)
