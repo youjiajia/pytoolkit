@@ -108,7 +108,9 @@ if __name__ == "__main__":
     # 使用qq邮箱 ssl smtp发送邮件
     """
     20170225 Tips:
-        1 _USER must as similar as _USER_NAME,because
+        1 _USER must as similar as _USER_NAME,
+        because many email servers will return content rejected if zhese not sumilar
+        2 Deal some probles about Chinese
     """
     cfg = load_config()
     main(cfg)
