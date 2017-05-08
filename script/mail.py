@@ -6,6 +6,7 @@ import getopt
 import sys
 import random
 from email.header import Header
+import os.path
 reload(sys)
 sys.setdefaultencoding("utf-8")
 
@@ -32,11 +33,12 @@ def msg_init(cfg):
     else:
         # add file
         msg = MIMEMultipart()
-        att = MIMEText(open(cfg.get("FILEPATH"), 'rb').read(), 'base64', 'utf-8')
-        att["Content-Type"] = 'application/octet-stream'
-        att["Content-Disposition"] = 'attachment; filename="{0}"'.format(
-            cfg.get("FILENAME"))
-        msg.attach(att)
+        for onefile in cfg.get("FILEPATH"):
+            filename = os.path.basename(onefile)
+            att = MIMEText(open(onefile, 'rb').read(), 'base64', 'utf-8')
+            att["Content-Type"] = 'application/octet-stream'
+            att["Content-Disposition"] = 'attachment; filename="{0}"'.format(filename)
+            msg.attach(att)
         # add content
         textmsg = MIMEText(cfg.get("CONTENT"), _charset='utf-8')
         textmsg["Accept-Language"] = "zh-CN"
@@ -77,20 +79,16 @@ def sysopt():
     args = sys.argv[1:]
     opts, _ = getopt.getopt(args, "n:f:ts")
     type = "text"
-    filepath = None
-    filename = None
+    filepath = []
     SMTP_SSL = False
     for o, v in opts:
         if o == '-t':
             type = "file"
-        elif o == '-n':
-            filename = v
         elif o == '-f':
-            filepath = v
+            filepath.append(v)
         elif o == '-s':
             SMTP_SSL = True
-    return dict(TYPE=type, FILEPATH=filepath,
-                FILENAME=filename, SMTP_SSL=SMTP_SSL)
+    return dict(TYPE=type, FILEPATH=filepath, SMTP_SSL=SMTP_SSL)
 
 
 class DefaultConfig(object):
@@ -111,6 +109,9 @@ if __name__ == "__main__":
         1 _USER must as similar as _USER_NAME,
         because many email servers will return content rejected if zhese not sumilar
         2 Deal some probles about Chinese
+    20170508 Tips:
+        1 get filenam by filepath
+        2 can send more files
     """
     cfg = load_config()
     main(cfg)
