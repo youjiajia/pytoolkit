@@ -39,7 +39,7 @@ def getAllMp3Home(showHomePage):
     # print data.content
     print "get pages successs"
     allmp3Home = {}
-    for x in xrange(int(pagenums[0])):
+    for x in xrange(1, int(pagenums[0])+1):
         rereobj = re.compile(r'\d\.htm', re.S)
         Url, n = re.subn(rereobj, str(x)+".htm", showHomePage)
         data = requests.get(Url)
