@@ -28,4 +28,8 @@ mail.py is the script for sending mails useing python.
                 -s if use ssl_smtp
                 -t if has file
 ```
+```
+pingshu8.py is the script for geting mp3 medias from www.pingshu8.com useing python.
+	use:python pingshu8.py Show HomePage
+```
 
