@@ -86,6 +86,7 @@ def downloadMp3(downloadUrls):
     if not os.path.exists(vod_dir):
         os.makedirs(vod_dir)
     bar = ProgressBar(total=len(downloadUrls))
+    failedlist = []
     def f(x):
         try:
             data = requests.get(quote(x).replace("%3A", ":"), stream=True)
@@ -98,10 +99,13 @@ def downloadMp3(downloadUrls):
             bar.move()
         except:
             print "{0} download failed".format(x)
+            failedlist.append(x)
     workers = []
     for x in downloadUrls:
-        workers.append(gevent.spawn(f, x))
-    gevent.joinall(workers)
+        f(x)
+        # workers.append(gevent.spawn(f, x))
+    # gevent.joinall(workers)
+    print "all failedlist is {0}".fomrat(failedlist)
 
 
 def main(showHomePage):
