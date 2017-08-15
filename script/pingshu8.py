@@ -102,6 +102,7 @@ def downloadMp3(downloadUrls):
     workers = []
     for x in downloadUrls:
         f(x)
+        # io时间过长 不适合用gevent 应该改成用传统线程
         # workers.append(gevent.spawn(f, x))
     # gevent.joinall(workers)
     print "all failedlist is {0}".format(failedlist)
