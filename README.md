@@ -2,7 +2,6 @@
 -----------
 Individual learning and working scripts.This project has these directories.
 > * system
-> * python
 > * study
 > * script
 
