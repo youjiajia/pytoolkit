@@ -87,14 +87,17 @@ def downloadMp3(downloadUrls):
         os.makedirs(vod_dir)
     bar = ProgressBar(total=len(downloadUrls))
     def f(x):
-        data = requests.get(quote(x).replace("%3A", ":"), stream=True)
-        filename = os.path.join(vod_dir, x.split("/")[-1])
-        f = open(filename, 'wb')
-        for chunk in data.iter_content(chunk_size=512):
-            if chunk:
-                f.write(chunk)
-        f.close()
-        bar.move()
+        try:
+            data = requests.get(quote(x).replace("%3A", ":"), stream=True)
+            filename = os.path.join(vod_dir, x.split("/")[-1])
+            f = open(filename, 'wb')
+            for chunk in data.iter_content(chunk_size=512):
+                if chunk:
+                    f.write(chunk)
+            f.close()
+            bar.move()
+        except:
+            print "{0} download failed".format(x)
     workers = []
     for x in downloadUrls:
         workers.append(gevent.spawn(f, x))
