@@ -4,6 +4,10 @@ import os
 import requests
 import re
 import time
+if 'threading' in sys.modules:
+    del sys.modules['threading']
+import gevent
+from gevent import monkey; monkey.patch_all()
 from urllib import unquote, quote
 reload(sys)
 sys.setdefaultencoding("utf-8")
@@ -20,7 +24,7 @@ class ProgressBar:
         sys.stdout.write(" " * (self.width + 9) + "\n")
         sys.stdout.flush()
         progress = self.width * self.count / self.total
-        sys.stdout.write("{0:3}/{1:3}".format(self.count, self.total))
+        sys.stdout.write("{0:3}/{1}   ".format(self.count, self.total))
         sys.stdout.write('#' * progress + '-' * (self.width - progress) + '\r')
         if progress == self.width:
             sys.stdout.write('\n')
@@ -50,24 +54,28 @@ def getAllMp3Home(showHomePage):
 
 def getAllDownloadUrls(Mp3Homes):
     allUrls = []
+    def f(i, x):
+        data = requests.get(x)
+        urlPattern = re.compile(r'var\sdownurl\s=\"(.*?)\";', re.S)
+        downUrls = re.findall(urlPattern, data.text)
+        uripattern = unquote(unquote(downUrls[0][10:]))
+        uri = uripattern[2:len(uripattern) - 5]
+        headers = {"Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+                   "Accept-Encoding": "gzip, deflate",
+                   "Accept-Language": "zh-CN,zh;q=0.8,en-US;q=0.6,en;q=0.4",
+                   "Cache-Control": "max-age=0",
+                   "Connection": "keep-alive",
+                   "Host": "www.pingshu8.com",
+                   "Referer": i,
+                   "Upgrade-Insecure-Requests": "1",
+                   "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36"}
+        data = requests.get("http://www.pingshu8.com"+uri, headers=headers, allow_redirects=False)
+        allUrls.append(data.headers['Location'])
+    workers = []
     for i in Mp3Homes.keys():
         for x in Mp3Homes[i]:
-            data = requests.get(x)
-            urlPattern = re.compile(r'var\sdownurl\s=\"(.*?)\";', re.S)
-            downUrls = re.findall(urlPattern, data.text)
-            uripattern = unquote(unquote(downUrls[0][10:]))
-            uri = uripattern[2:len(uripattern) - 5]
-            headers = {"Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
-                       "Accept-Encoding": "gzip, deflate",
-                       "Accept-Language": "zh-CN,zh;q=0.8,en-US;q=0.6,en;q=0.4",
-                       "Cache-Control": "max-age=0",
-                       "Connection": "keep-alive",
-                       "Host": "www.pingshu8.com",
-                       "Referer": i,
-                       "Upgrade-Insecure-Requests": "1",
-                       "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36"}
-            data = requests.get("http://www.pingshu8.com"+uri, headers=headers, allow_redirects=False)
-            allUrls.append(data.headers['Location'])
+            workers.append(gevent.spawn(f, i, x))
+    gevent.joinall(workers)
     print "get allmp3 Urls successs"
     return allUrls
 
@@ -78,7 +86,7 @@ def downloadMp3(downloadUrls):
     if not os.path.exists(vod_dir):
         os.makedirs(vod_dir)
     bar = ProgressBar(total=len(downloadUrls))
-    for x in downloadUrls:
+    def f(x):
         data = requests.get(quote(x).replace("%3A", ":"), stream=True)
         filename = os.path.join(vod_dir, x.split("/")[-1])
         f = open(filename, 'wb')
@@ -87,6 +95,10 @@ def downloadMp3(downloadUrls):
                 f.write(chunk)
         f.close()
         bar.move()
+    workers = []
+    for x in downloadUrls:
+        workers.append(gevent.spawn(f, x))
+    gevent.joinall(workers)
 
 
 def main(showHomePage):
@@ -104,9 +116,9 @@ if __name__ == "__main__":
             main(showHomePage)
         except:
             print "failure！！！"
-        alltime = time.time() - firsttime
+        alltime = int(time.time() - firsttime)
         m, s = divmod(alltime, 60)
         h, m = divmod(m, 60)
-        print u"共用时%d小时%02d分钟%02d秒" % (h, m, s)
+        print "total use %d hours %02d minutes %02d seconds" % (h, m, s)
     else:
         print "please input pingshu8 show HomePage"
