@@ -21,7 +21,6 @@ class ProgressBar:
 
     def move(self):
         self.count += 1
-        sys.stdout.write(" " * (self.width + 9))
         sys.stdout.flush()
         progress = self.width * self.count / self.total
         sys.stdout.write("{0:3}/{1}   ".format(self.count, self.total))
