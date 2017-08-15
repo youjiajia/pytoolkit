@@ -104,7 +104,7 @@ def downloadMp3(downloadUrls):
         f(x)
         # workers.append(gevent.spawn(f, x))
     # gevent.joinall(workers)
-    print "all failedlist is {0}".fomrat(failedlist)
+    print "all failedlist is {0}".format(failedlist)
 
 
 def main(showHomePage):
@@ -121,7 +121,7 @@ if __name__ == "__main__":
         try:
             main(showHomePage)
         except:
-            print "failure！！！"
+            print "failure!!!"
         alltime = int(time.time() - firsttime)
         m, s = divmod(alltime, 60)
         h, m = divmod(m, 60)
