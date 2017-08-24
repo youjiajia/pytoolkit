@@ -34,6 +34,8 @@ mail.py 使用python来发送邮件的脚本.
 ```
 pingshu8.py is the script for geting mp3 medias from www.pingshu8.com useing python.
 	use:python pingshu8.py YourShowHomePage
+pingshu8.py 通过爬虫从www.pingshu8.com下载mp3文件
+    使用:python pingshu8.py 需要下载的评书吧节目主页地址
 ```
 ```
 toQiNiu.py is the script to upload the entire folder to the seven bull cloud.
