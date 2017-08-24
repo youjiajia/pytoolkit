@@ -29,6 +29,10 @@ mail.py is the script for sending mails useing python.
 ```
 ```
 pingshu8.py is the script for geting mp3 medias from www.pingshu8.com useing python.
-	use:python pingshu8.py Show HomePage
+	use:python pingshu8.py YourShowHomePage
+```
+```
+toQiNiu.py is the script to upload the entire folder to the seven bull cloud.
+    use:python toQiNiu.py
 ```
 
