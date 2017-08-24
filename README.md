@@ -47,5 +47,14 @@ toQiNiu.py is the script to upload the entire folder to the seven bull cloud.
                 --filep which you need to upload for filtering unwanted files
                 --dirp which you need to upload for filtering unwanted folders
     And you can change these parameters in toQiNiu.py by class DefaultConfig.
+toQiNiu.py 通过脚本直接上传整个文件夹到七牛云
+    使用:python toQiNiu.py
+    参数: -a 七牛 ACCESS_KEY
+                -s 七牛 SCRET_KEY
+                -b 你需要传入的七牛 BUCKET_NAME
+                -d 需要上传的文件夹名称
+                --filep 筛选不需要文件的正则表达式
+                --dirp 筛选不需要文件夹的正则表达式
+    或者你可以直接修改文件里的DefaultConfig类
 ```
 
