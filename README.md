@@ -34,5 +34,12 @@ pingshu8.py is the script for geting mp3 medias from www.pingshu8.com useing pyt
 ```
 toQiNiu.py is the script to upload the entire folder to the seven bull cloud.
     use:python toQiNiu.py
+    Parameters: -a seven bull ACCESS_KEY
+                -s seven bull SCRET_KEY
+                -b seven bull BUCKET_NAME which you need to upload
+                -d DIRNAME which you will upload
+                --filep which you need to upload for filtering unwanted files
+                --dirp which you need to upload for filtering unwanted folders
+    And you can change these parameters in toQiNiu.py by class DefaultConfig.
 ```
 
