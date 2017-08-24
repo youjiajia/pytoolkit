@@ -10,9 +10,6 @@ Individual learning and working scripts.This project has these directories.
 > When I reinstall the system like ubuntu or deepin,I always need install and configure the environment.This directory includes commands for config the environment.
 
 
-### python
-> Like the system dirtory, this dirtory is config for python, include pyenv ,pip,  virtualenv and so on.
-
 ### study
 > This dirtory is for me to take notes when study.
 
@@ -23,9 +20,16 @@ Small script summary
 mail.py is the script for sending mails useing python.
 	use:python mail.py
 	Parameters: -f filepath
-				-n filename
                 -s if use ssl_smtp
                 -t if has file
+    install: you need config your mail info in mail.py by class DefaultConfig.
+mail.py 使用python来发送邮件的脚本.
+    使用: python mail.py
+    参数: -t 如果需要上传文件，输入-t
+          -f 如果需要上传文件，传入文件路径
+          -s 如果使用ssl_smtp，输入-s
+    安装：需要文件里修改DefaultConfig类,配置上你的邮箱信息
+
 ```
 ```
 pingshu8.py is the script for geting mp3 medias from www.pingshu8.com useing python.

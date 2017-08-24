@@ -77,7 +77,7 @@ def main(cfg):
 
 def sysopt():
     args = sys.argv[1:]
-    opts, _ = getopt.getopt(args, "n:f:ts")
+    opts, _ = getopt.getopt(args, "f:ts")
     type = "text"
     filepath = []
     SMTP_SSL = False
